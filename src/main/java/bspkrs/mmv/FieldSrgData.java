@@ -27,6 +27,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 
 public class FieldSrgData extends MemberSrgData implements Comparable<FieldSrgData> {
+  
   public FieldSrgData(
       String obfOwner,
       String obfName,
@@ -36,10 +37,13 @@ public class FieldSrgData extends MemberSrgData implements Comparable<FieldSrgDa
       boolean isClientOnly) {
     super(obfOwner, obfName, srgOwner, srgPkg, srgName, isClientOnly);
   }
-
+  
   @Override
   public int compareTo(FieldSrgData o) {
-    if (o != null) return this.getSrgName().compareTo(o.getSrgName());
-    else return 1;
+    if (o != null) {
+      return this.getSrgName().compareTo(o.getSrgName());
+    } else {
+      return 1;
+    }
   }
 }

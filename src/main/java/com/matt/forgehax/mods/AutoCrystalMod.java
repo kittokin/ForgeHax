@@ -1,6 +1,8 @@
 package com.matt.forgehax.mods;
 
-import static com.matt.forgehax.Helper.*;
+import static com.matt.forgehax.Helper.getLocalPlayer;
+import static com.matt.forgehax.Helper.getNetworkManager;
+import static com.matt.forgehax.Helper.getWorld;
 
 import com.matt.forgehax.events.LocalPlayerUpdateEvent;
 import com.matt.forgehax.util.SimpleTimer;
@@ -19,9 +21,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-/** Created on 3/12/2018 by exkerbinator */
+/**
+ * Created on 3/12/2018 by exkerbinator
+ */
 @RegisterMod
 public class AutoCrystalMod extends ToggleMod {
+  
   public final Setting<Float> maxDistance =
       getCommandStub()
           .builders()
@@ -31,7 +36,7 @@ public class AutoCrystalMod extends ToggleMod {
           .defaultTo(3f)
           .min(0f)
           .build();
-
+  
   public final Setting<Float> minDistance =
       getCommandStub()
           .builders()
@@ -41,7 +46,7 @@ public class AutoCrystalMod extends ToggleMod {
           .defaultTo(0f)
           .min(0f)
           .build();
-
+  
   public final Setting<Float> minHeight =
       getCommandStub()
           .builders()
@@ -50,7 +55,7 @@ public class AutoCrystalMod extends ToggleMod {
           .description("detonate crystals with a relative y coord greater than this value")
           .defaultTo(-5f)
           .build();
-
+  
   public final Setting<Integer> delay =
       getCommandStub()
           .builders()
@@ -60,7 +65,7 @@ public class AutoCrystalMod extends ToggleMod {
           .defaultTo(10)
           .min(0)
           .build();
-
+  
   public final Setting<Boolean> checkEnemy =
       getCommandStub()
           .builders()
@@ -69,7 +74,7 @@ public class AutoCrystalMod extends ToggleMod {
           .description("only detonate crystals close to enemy players")
           .defaultTo(true)
           .build();
-
+  
   public final Setting<Float> maxEnemyDistance =
       getCommandStub()
           .builders()
@@ -79,22 +84,22 @@ public class AutoCrystalMod extends ToggleMod {
           .defaultTo(10f)
           .min(0f)
           .build();
-
+  
   public AutoCrystalMod() {
     super(Category.COMBAT, "AutoCrystal", false, "Automatically detonates nearby end crystals");
   }
-
+  
   private SimpleTimer timer = new SimpleTimer();
-
+  
   @Override
   public void onEnabled() {
     timer.start();
   }
-
+  
   private Predicate<Entity> playerWithinDistance(float dist) {
     return k -> getLocalPlayer().getDistanceSq(k) < dist * dist;
   }
-
+  
   private boolean enemyWithinDistance(Entity e, float dist) {
     Vec3d delta = new Vec3d(dist, dist, dist);
     AxisAlignedBB bb =
@@ -105,13 +110,15 @@ public class AutoCrystalMod extends ToggleMod {
         .filter(p -> !p.isEntityEqual(getLocalPlayer()))
         .anyMatch(p -> e.getDistanceSq(p) < dist * dist);
   }
-
+  
   @SubscribeEvent
   public void onTick(LocalPlayerUpdateEvent event) {
     if (getWorld() != null && getLocalPlayer() != null) {
       // Short-circuit if the timer check will fail
-      if (!timer.hasTimeElapsed(delay.get())) return;
-
+      if (!timer.hasTimeElapsed(delay.get())) {
+        return;
+      }
+      
       Vec3d delta = new Vec3d(maxDistance.get(), maxDistance.get(), maxDistance.get());
       AxisAlignedBB bb =
           new AxisAlignedBB(

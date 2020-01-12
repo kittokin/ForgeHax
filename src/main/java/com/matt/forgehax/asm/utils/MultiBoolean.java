@@ -3,17 +3,22 @@ package com.matt.forgehax.asm.utils;
 import com.google.common.collect.Sets;
 import java.util.Set;
 
-/** Created on 5/12/2017 by fr1kin */
+/**
+ * Created on 5/12/2017 by fr1kin
+ */
 public class MultiBoolean {
-  /** A list of unique string ids so that one mod cannot increment the level more than once. */
+  
+  /**
+   * A list of unique string ids so that one mod cannot increment the level more than once.
+   */
   private final Set<String> ids = Sets.newCopyOnWriteArraySet();
-
+  
   private int level = 0;
-
+  
   private void clampLevel() {
     level = Math.max(0, Math.min(ids.size(), level));
   }
-
+  
   /**
    * Effectively enables this object
    *
@@ -25,7 +30,7 @@ public class MultiBoolean {
       clampLevel();
     }
   }
-
+  
   /**
    * Disables this object for the specific id
    *
@@ -37,7 +42,7 @@ public class MultiBoolean {
       clampLevel();
     }
   }
-
+  
   /**
    * Will clear the id list and set the level to zero, disabling this object Do not use this unless
    * it's absolutely necessary
@@ -46,7 +51,7 @@ public class MultiBoolean {
     level = 0;
     ids.clear();
   }
-
+  
   /**
    * Check if the object is enabled
    *

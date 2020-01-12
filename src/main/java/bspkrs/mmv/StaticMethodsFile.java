@@ -35,15 +35,16 @@ import java.util.List;
 import java.util.Scanner;
 
 public class StaticMethodsFile {
+  
   private final File file;
   public List<String> staticMethods;
-
+  
   public StaticMethodsFile(File file) throws IOException {
     this.file = file;
     staticMethods = new ArrayList<String>();
     readFromFile();
   }
-
+  
   public void readFromFile() throws IOException {
     Scanner in = new Scanner(new BufferedReader(new FileReader(file)));
     try {
@@ -54,7 +55,7 @@ public class StaticMethodsFile {
       in.close();
     }
   }
-
+  
   public boolean contains(String srgName) {
     return staticMethods.contains(srgName);
   }

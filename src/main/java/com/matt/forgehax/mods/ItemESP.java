@@ -20,10 +20,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @RegisterMod
 public class ItemESP extends ToggleMod {
+  
   public ItemESP() {
     super(Category.RENDER, "ItemESP", false, "ESP for items");
   }
-
+  
   public final Setting<Double> scale =
       getCommandStub()
           .builders()
@@ -33,7 +34,7 @@ public class ItemESP extends ToggleMod {
           .defaultTo(1.D)
           .min(0.D)
           .build();
-
+  
   @SubscribeEvent
   public void onRender2D(final Render2DEvent event) {
     GlStateManager.enableBlend();
@@ -44,9 +45,9 @@ public class ItemESP extends ToggleMod {
         GlStateManager.DestFactor.ZERO);
     GlStateManager.enableTexture2D();
     GlStateManager.disableDepth();
-
+    
     final double scale = this.scale.get() == 0 ? 1.D : this.scale.get();
-
+    
     getWorld()
         .loadedEntityList
         .stream()
@@ -58,32 +59,34 @@ public class ItemESP extends ToggleMod {
               Vec3d bottomPos = EntityUtils.getInterpolatedPos(entity, event.getPartialTicks());
               Vec3d topPos =
                   bottomPos.addVector(0.D, entity.getRenderBoundingBox().maxY - entity.posY, 0.D);
-
+              
               Plane top = VectorUtils.toScreen(topPos);
               Plane bot = VectorUtils.toScreen(bottomPos);
-
-              if (!top.isVisible() && !bot.isVisible()) return;
-
+              
+              if (!top.isVisible() && !bot.isVisible()) {
+                return;
+              }
+              
               double offX = bot.getX() - top.getX();
               double offY = bot.getY() - top.getY();
-
+              
               GlStateManager.pushMatrix();
               GlStateManager.translate(top.getX() - (offX / 2.D), bot.getY(), 0);
-
+              
               ItemStack stack = entity.getItem();
               String text =
                   stack.getDisplayName() + (stack.isStackable() ? (" x" + stack.getCount()) : "");
-
+              
               SurfaceHelper.drawTextShadow(
                   text,
                   (int) (offX / 2.D - SurfaceHelper.getTextWidth(text, scale) / 2.D),
                   -(int) (offY - SurfaceHelper.getTextHeight(scale) / 2.D) - 1,
                   Colors.WHITE.toBuffer(),
                   scale);
-
+              
               GlStateManager.popMatrix();
             });
-
+    
     GlStateManager.enableDepth();
     GlStateManager.disableBlend();
   }

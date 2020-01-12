@@ -1,9 +1,13 @@
 package com.matt.forgehax.util.draw;
 
 import static com.matt.forgehax.Helper.getLocalPlayer;
+import static com.matt.forgehax.util.math.AlignHelper.getFlowDirY2;
 
 import com.matt.forgehax.Globals;
 import com.matt.forgehax.Helper;
+import com.matt.forgehax.util.draw.font.MinecraftFontRenderer;
+import com.matt.forgehax.util.math.AlignHelper;
+import java.util.List;
 import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -23,10 +27,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import uk.co.hexeption.thx.ttf.MinecraftFontRenderer;
 
-/** 2D rendering */
+/**
+ * 2D rendering
+ */
 public class SurfaceHelper implements Globals {
+  
   public static void drawString(
       @Nullable MinecraftFontRenderer fontRenderer,
       String text,
@@ -40,26 +46,32 @@ public class SurfaceHelper implements Globals {
       fontRenderer.drawString(text, x, y, color, shadow);
     }
   }
-
+  
   public static double getStringWidth(@Nullable MinecraftFontRenderer fontRenderer, String text) {
-    if (fontRenderer == null) return MC.fontRenderer.getStringWidth(text);
-    else return fontRenderer.getStringWidth(text);
+    if (fontRenderer == null) {
+      return MC.fontRenderer.getStringWidth(text);
+    } else {
+      return fontRenderer.getStringWidth(text);
+    }
   }
-
+  
   public static double getStringHeight(@Nullable MinecraftFontRenderer fontRenderer) {
-    if (fontRenderer == null) return MC.fontRenderer.FONT_HEIGHT;
-    else return fontRenderer.getHeight();
+    if (fontRenderer == null) {
+      return MC.fontRenderer.FONT_HEIGHT;
+    } else {
+      return fontRenderer.getHeight();
+    }
   }
-
+  
   public static void drawRect(int x, int y, int w, int h, int color) {
     GL11.glLineWidth(1.0f);
     Gui.drawRect(x, y, x + w, y + h, color);
   }
-
+  
   public static void drawOutlinedRect(int x, int y, int w, int h, int color) {
     drawOutlinedRect(x, y, w, h, color, 1.f);
   }
-
+  
   public static void drawOutlinedRectShaded(
       int x, int y, int w, int h, int colorOutline, int shade, float width) {
     int shaded = (0x00FFFFFF & colorOutline) | ((shade & 255) << 24); // modify the alpha value
@@ -67,7 +79,7 @@ public class SurfaceHelper implements Globals {
     drawRect(x, y, w, h, shaded);
     drawOutlinedRect(x, y, w, h, colorOutline, width);
   }
-
+  
   public static void drawOutlinedRect(int x, int y, int w, int h, int color, float width) {
     float r = (float) (color >> 16 & 255) / 255.0F;
     float g = (float) (color >> 8 & 255) / 255.0F;
@@ -75,7 +87,7 @@ public class SurfaceHelper implements Globals {
     float a = (float) (color >> 24 & 255) / 255.0F;
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder BufferBuilder = tessellator.getBuffer();
-
+    
     GlStateManager.enableBlend();
     GlStateManager.disableTexture2D();
     GlStateManager.tryBlendFuncSeparate(
@@ -84,48 +96,48 @@ public class SurfaceHelper implements Globals {
         GlStateManager.SourceFactor.ONE,
         GlStateManager.DestFactor.ZERO);
     GlStateManager.color(r, g, b, a);
-
+    
     GL11.glLineWidth(width);
-
+    
     BufferBuilder.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
-    BufferBuilder.pos((double) x, (double) y, 0.0D).endVertex();
-    BufferBuilder.pos((double) x, (double) y + h, 0.0D).endVertex();
+    BufferBuilder.pos(x, y, 0.0D).endVertex();
+    BufferBuilder.pos(x, (double) y + h, 0.0D).endVertex();
     BufferBuilder.pos((double) x + w, (double) y + h, 0.0D).endVertex();
-    BufferBuilder.pos((double) x + w, (double) y, 0.0D).endVertex();
+    BufferBuilder.pos((double) x + w, y, 0.0D).endVertex();
     tessellator.draw();
-
+    
     GlStateManager.enableTexture2D();
     GlStateManager.disableBlend();
   }
-
+  
   public static void drawTexturedRect(
       int x, int y, int textureX, int textureY, int width, int height, int zLevel) {
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder BufferBuilder = tessellator.getBuffer();
     BufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-    BufferBuilder.pos((double) (x + 0), (double) (y + height), (double) zLevel)
+    BufferBuilder.pos(x + 0, y + height, zLevel)
         .tex(
-            (double) ((float) (textureX + 0) * 0.00390625F),
-            (double) ((float) (textureY + height) * 0.00390625F))
+            (float) (textureX + 0) * 0.00390625F,
+            (float) (textureY + height) * 0.00390625F)
         .endVertex();
-    BufferBuilder.pos((double) (x + width), (double) (y + height), (double) zLevel)
+    BufferBuilder.pos(x + width, y + height, zLevel)
         .tex(
-            (double) ((float) (textureX + width) * 0.00390625F),
-            (double) ((float) (textureY + height) * 0.00390625F))
+            (float) (textureX + width) * 0.00390625F,
+            (float) (textureY + height) * 0.00390625F)
         .endVertex();
-    BufferBuilder.pos((double) (x + width), (double) (y + 0), (double) zLevel)
+    BufferBuilder.pos(x + width, y + 0, zLevel)
         .tex(
-            (double) ((float) (textureX + width) * 0.00390625F),
-            (double) ((float) (textureY + 0) * 0.00390625F))
+            (float) (textureX + width) * 0.00390625F,
+            (float) (textureY + 0) * 0.00390625F)
         .endVertex();
-    BufferBuilder.pos((double) (x + 0), (double) (y + 0), (double) zLevel)
+    BufferBuilder.pos(x + 0, y + 0, zLevel)
         .tex(
-            (double) ((float) (textureX + 0) * 0.00390625F),
-            (double) ((float) (textureY + 0) * 0.00390625F))
+            (float) (textureX + 0) * 0.00390625F,
+            (float) (textureY + 0) * 0.00390625F)
         .endVertex();
     tessellator.draw();
   }
-
+  
   public static void drawLine(int x1, int y1, int x2, int y2, int color, float width) {
     float r = (float) (color >> 16 & 255) / 255.0F;
     float g = (float) (color >> 8 & 255) / 255.0F;
@@ -133,7 +145,7 @@ public class SurfaceHelper implements Globals {
     float a = (float) (color >> 24 & 255) / 255.0F;
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder BufferBuilder = tessellator.getBuffer();
-
+    
     GlStateManager.enableBlend();
     GlStateManager.disableTexture2D();
     GlStateManager.tryBlendFuncSeparate(
@@ -142,31 +154,80 @@ public class SurfaceHelper implements Globals {
         GlStateManager.SourceFactor.ONE,
         GlStateManager.DestFactor.ZERO);
     GlStateManager.color(r, g, b, a);
-
+    
     GL11.glLineWidth(width);
-
+    
     BufferBuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-    BufferBuilder.pos((double) x1, (double) y1, 0.0D).endVertex();
-    BufferBuilder.pos((double) x2, (double) y2, 0.0D).endVertex();
+    BufferBuilder.pos(x1, y1, 0.0D).endVertex();
+    BufferBuilder.pos(x2, y2, 0.0D).endVertex();
     tessellator.draw();
-
+    
     GlStateManager.color(1f, 1f, 1f);
     GlStateManager.enableTexture2D();
     GlStateManager.disableBlend();
   }
-
+  
   public static void drawText(String msg, int x, int y, int color) {
     MC.fontRenderer.drawString(msg, x, y, color);
   }
-
+  
   public static void drawTextShadow(String msg, int x, int y, int color) {
     MC.fontRenderer.drawStringWithShadow(msg, x, y, color);
   }
-
+  
   public static void drawTextShadowCentered(String msg, float x, float y, int color) {
     float offsetX = getTextWidth(msg) / 2f;
     float offsetY = getTextHeight() / 2f;
     MC.fontRenderer.drawStringWithShadow(msg, x - offsetX, y - offsetY, color);
+  }
+
+  public static void drawTextAlignH(String msg, int x, int y, int color, boolean shadow, int alignmask) {
+    final int offsetX = AlignHelper.alignH(getTextWidth(msg), alignmask);
+    MC.fontRenderer.drawString(msg, x - offsetX, y, color, shadow);
+  }
+  
+  public static void drawTextShadowAlignH(String msg, int x, int y, int color, int alignmask) {
+    drawTextAlignH(msg, x, y, color, true, alignmask);
+  }
+  
+  public static void drawTextAlign(String msg, int x, int y, int color, boolean shadow, int alignmask) {
+    final int offsetX = AlignHelper.alignH(getTextWidth(msg), alignmask);
+    final int offsetY = AlignHelper.alignV(getTextHeight(), alignmask);
+    MC.fontRenderer.drawString(msg, x - offsetX, y - offsetY, color, shadow);
+  }
+  
+  public static void drawTextShadowAlign(String msg, int x, int y, int color, int alignmask) {
+    drawTextAlign(msg, x, y, color, true, alignmask);
+  }
+  
+  public static void drawTextAlign(String msg, int x, int y, int color, double scale, boolean shadow, int alignmask) {
+    final int offsetX = AlignHelper.alignH((int)(getTextWidth(msg)*scale), alignmask);
+    final int offsetY = AlignHelper.alignV((int)(getTextHeight()*scale), alignmask);
+    if (scale != 1.0d) {
+      drawText(msg, x - offsetX, y - offsetY, color, scale, shadow);
+    } else {
+      MC.fontRenderer.drawString(msg, x - offsetX, y - offsetY, color, shadow);
+    }
+  }
+  
+  public static void drawTextAlign(List<String> msgList, int x, int y, int color, double scale, boolean shadow, int alignmask) {
+    GlStateManager.pushMatrix();
+    GlStateManager.disableDepth();
+    GlStateManager.scale(scale, scale, scale);
+    
+    final int offsetY = AlignHelper.alignV((int) (getTextHeight() * scale), alignmask);
+    final int height = (int)(getFlowDirY2(alignmask) * (getTextHeight()+1) * scale);
+    final float invScale = (float)(1 / scale);
+    
+    for (int i = 0; i < msgList.size(); i++) {
+      final int offsetX = AlignHelper.alignH((int) (getTextWidth(msgList.get(i)) * scale), alignmask);
+      
+      MC.fontRenderer.drawString(
+          msgList.get(i), (x - offsetX) * invScale, (y - offsetY + height*i) * invScale, color, shadow);
+    }
+    
+    GlStateManager.enableDepth();
+    GlStateManager.popMatrix();
   }
 
   public static void drawText(String msg, int x, int y, int color, double scale, boolean shadow) {
@@ -178,39 +239,39 @@ public class SurfaceHelper implements Globals {
     GlStateManager.enableDepth();
     GlStateManager.popMatrix();
   }
-
+  
   public static void drawText(String msg, int x, int y, int color, double scale) {
     drawText(msg, x, y, color, scale, false);
   }
-
+  
   public static void drawTextShadow(String msg, int x, int y, int color, double scale) {
     drawText(msg, x, y, color, scale, true);
   }
-
+  
   public static int getTextWidth(String text, double scale) {
     return (int) (MC.fontRenderer.getStringWidth(text) * scale);
   }
-
+  
   public static int getTextWidth(String text) {
     return getTextWidth(text, 1.D);
   }
-
+  
   public static int getTextHeight() {
     return MC.fontRenderer.FONT_HEIGHT;
   }
-
+  
   public static int getTextHeight(double scale) {
     return (int) (MC.fontRenderer.FONT_HEIGHT * scale);
   }
-
+  
   public static void drawItem(ItemStack item, int x, int y) {
     MC.getRenderItem().renderItemAndEffectIntoGUI(item, x, y);
   }
-
+  
   public static void drawItemOverlay(ItemStack stack, int x, int y) {
     MC.getRenderItem().renderItemOverlayIntoGUI(MC.fontRenderer, stack, x, y, null);
   }
-
+  
   public static void drawItem(ItemStack item, double x, double y) {
     GlStateManager.pushMatrix();
     RenderHelper.enableGUIStandardItemLighting();
@@ -226,7 +287,7 @@ public class SurfaceHelper implements Globals {
     GlStateManager.enableDepth();
     GlStateManager.color(1.f, 1.f, 1.f, 1.f);
   }
-
+  
   public static void drawItemWithOverlay(ItemStack item, double x, double y, double scale) {
     GlStateManager.pushMatrix();
     RenderHelper.enableGUIStandardItemLighting();
@@ -243,7 +304,7 @@ public class SurfaceHelper implements Globals {
     GlStateManager.enableDepth();
     GlStateManager.color(1.f, 1.f, 1.f, 1.f);
   }
-
+  
   public static void drawPotionEffect(PotionEffect potion, int x, int y) {
     int index = potion.getPotion().getStatusIconIndex();
     GlStateManager.pushMatrix();
@@ -262,7 +323,7 @@ public class SurfaceHelper implements Globals {
     GlStateManager.color(1.f, 1.f, 1.f, 1.f);
     GlStateManager.popMatrix();
   }
-
+  
   public static void drawHead(ResourceLocation skinResource, double x, double y, float scale) {
     GlStateManager.pushMatrix();
     MC.renderEngine.bindTexture(skinResource);
@@ -274,7 +335,7 @@ public class SurfaceHelper implements Globals {
         (x * (1 / scale)), (y * (1 / scale)), 40.0F, 8.0F, 8, 8, 12, 12, 64.0F, 64.0F);
     GlStateManager.popMatrix();
   }
-
+  
   protected static void renderItemAndEffectIntoGUI(
       @Nullable EntityLivingBase living, final ItemStack stack, double x, double y, double scale) {
     if (!stack.isEmpty()) {
@@ -289,7 +350,7 @@ public class SurfaceHelper implements Globals {
       }
     }
   }
-
+  
   private static void renderItemModelIntoGUI(
       ItemStack stack, double x, double y, IBakedModel bakedmodel, double scale) {
     GlStateManager.pushMatrix();
@@ -304,15 +365,18 @@ public class SurfaceHelper implements Globals {
     GlStateManager.blendFunc(
         GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
+    
     GlStateManager.translate(x, y, 100.0F + MC.getRenderItem().zLevel);
     GlStateManager.translate(8.0F, 8.0F, 0.0F);
     GlStateManager.scale(1.0F, -1.0F, 1.0F);
     GlStateManager.scale(scale, scale, scale);
-
-    if (bakedmodel.isGui3d()) GlStateManager.enableLighting();
-    else GlStateManager.disableLighting();
-
+    
+    if (bakedmodel.isGui3d()) {
+      GlStateManager.enableLighting();
+    } else {
+      GlStateManager.disableLighting();
+    }
+    
     bakedmodel =
         net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
             bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
@@ -324,7 +388,7 @@ public class SurfaceHelper implements Globals {
     MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
     MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
   }
-
+  
   protected static void renderItemOverlayIntoGUI(
       FontRenderer fr,
       ItemStack stack,
@@ -333,7 +397,7 @@ public class SurfaceHelper implements Globals {
       @Nullable String text,
       double scale) {
     final double SCALE_RATIO = 1.23076923077D;
-
+    
     if (!stack.isEmpty()) {
       if (stack.getCount() != 1 || text != null) {
         String s = text == null ? String.valueOf(stack.getCount()) : text;
@@ -351,7 +415,7 @@ public class SurfaceHelper implements Globals {
         // TODO: check if enabled blending still screws things up down the line.
         GlStateManager.enableBlend();
       }
-
+      
       if (stack.getItem().showDurabilityBar(stack)) {
         GlStateManager.disableLighting();
         GlStateManager.disableDepth();
@@ -378,7 +442,7 @@ public class SurfaceHelper implements Globals {
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
       }
-
+      
       EntityPlayerSP entityplayersp = Minecraft.getMinecraft().player;
       float f3 =
           entityplayersp == null
@@ -386,7 +450,7 @@ public class SurfaceHelper implements Globals {
               : entityplayersp
                   .getCooldownTracker()
                   .getCooldown(stack.getItem(), Minecraft.getMinecraft().getRenderPartialTicks());
-
+      
       if (f3 > 0.0F) {
         GlStateManager.disableLighting();
         GlStateManager.disableDepth();
@@ -398,31 +462,31 @@ public class SurfaceHelper implements Globals {
       }
     }
   }
-
+  
   private static void draw(
       double x, double y, double width, double height, int red, int green, int blue, int alpha) {
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder renderer = tessellator.getBuffer();
     renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
     renderer
-        .pos((double) (x + 0), (double) (y + 0), 0.0D)
+        .pos(x + 0, y + 0, 0.0D)
         .color(red, green, blue, alpha)
         .endVertex();
     renderer
-        .pos((double) (x + 0), (double) (y + height), 0.0D)
+        .pos(x + 0, y + height, 0.0D)
         .color(red, green, blue, alpha)
         .endVertex();
     renderer
-        .pos((double) (x + width), (double) (y + height), 0.0D)
+        .pos(x + width, y + height, 0.0D)
         .color(red, green, blue, alpha)
         .endVertex();
     renderer
-        .pos((double) (x + width), (double) (y + 0), 0.0D)
+        .pos(x + width, y + 0, 0.0D)
         .color(red, green, blue, alpha)
         .endVertex();
     Tessellator.getInstance().draw();
   }
-
+  
   protected static void drawScaledCustomSizeModalRect(
       double x,
       double y,
@@ -440,36 +504,36 @@ public class SurfaceHelper implements Globals {
     BufferBuilder bufferbuilder = tessellator.getBuffer();
     bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
     bufferbuilder
-        .pos((double) x, (double) (y + height), 0.0D)
-        .tex((double) (u * f), (double) ((v + (float) vHeight) * f1))
+        .pos(x, y + height, 0.0D)
+        .tex(u * f, (v + (float) vHeight) * f1)
         .endVertex();
     bufferbuilder
-        .pos((double) (x + width), (double) (y + height), 0.0D)
-        .tex((double) ((u + (float) uWidth) * f), (double) ((v + (float) vHeight) * f1))
+        .pos(x + width, y + height, 0.0D)
+        .tex((u + (float) uWidth) * f, (v + (float) vHeight) * f1)
         .endVertex();
     bufferbuilder
-        .pos((double) (x + width), (double) y, 0.0D)
-        .tex((double) ((u + (float) uWidth) * f), (double) (v * f1))
+        .pos(x + width, y, 0.0D)
+        .tex((u + (float) uWidth) * f, v * f1)
         .endVertex();
     bufferbuilder
-        .pos((double) x, (double) y, 0.0D)
-        .tex((double) (u * f), (double) (v * f1))
+        .pos(x, y, 0.0D)
+        .tex(u * f, v * f1)
         .endVertex();
     tessellator.draw();
   }
-
+  
   public static int getHeadWidth(float scale) {
     return (int) (scale * 12);
   }
-
+  
   public static int getHeadWidth() {
     return getHeadWidth(1.f);
   }
-
+  
   public static int getHeadHeight(float scale) {
     return (int) (scale * 12);
   }
-
+  
   public static int getHeadHeight() {
     return getHeadWidth(1.f);
   }

@@ -17,6 +17,7 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
     if [ "${1:-}" = "--help" ]; then
         usage
     else        
+        mkdir -p .gradle
         docker-compose \
             -f docker-compose.ci.yml \
             run --rm \
@@ -25,6 +26,6 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
         docker-compose \
             -f docker-compose.ci.yml \
             run --rm \
-            forgehax setupDecompWorkspace --stacktrace
+            forgehax setupDecompWorkspace --stacktrace --refresh-dependencies
     fi
 fi

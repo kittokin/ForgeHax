@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @RegisterMod
 public class BlockHighlightMod extends ToggleMod {
-
+  
   private final Setting<Integer> alpha =
       getCommandStub()
           .builders()
@@ -51,7 +51,7 @@ public class BlockHighlightMod extends ToggleMod {
           .max(255)
           .defaultTo(0)
           .build();
-
+  
   private final Setting<Float> width =
       getCommandStub()
           .builders()
@@ -61,16 +61,16 @@ public class BlockHighlightMod extends ToggleMod {
           .min(0.f)
           .defaultTo(5.f)
           .build();
-
+  
   public BlockHighlightMod() {
     super(
         Category.RENDER, "BlockHighlight", false, "Make selected block bounding box more visible");
   }
-
+  
   private float toFloat(int colorVal) {
     return colorVal / 255.f;
   }
-
+  
   @SubscribeEvent
   public void onRenderBoxPre(DrawBlockBoundingBoxEvent.Pre event) {
     GlStateManager.disableDepth();
@@ -80,7 +80,7 @@ public class BlockHighlightMod extends ToggleMod {
     event.green = toFloat(green.get());
     event.blue = toFloat(blue.get());
   }
-
+  
   @SubscribeEvent
   public void onRenderBoxPost(DrawBlockBoundingBoxEvent.Post event) {
     GlStateManager.enableDepth();

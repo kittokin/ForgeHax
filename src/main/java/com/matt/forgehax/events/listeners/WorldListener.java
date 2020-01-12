@@ -13,16 +13,20 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 public class WorldListener implements IWorldEventListener {
+  
   @Override
   public void notifyBlockUpdate(
-      World worldIn, BlockPos pos, IBlockState oldState, IBlockState newState, int flags) {}
-
+      World worldIn, BlockPos pos, IBlockState oldState, IBlockState newState, int flags) {
+  }
+  
   @Override
-  public void notifyLightSet(BlockPos pos) {}
-
+  public void notifyLightSet(BlockPos pos) {
+  }
+  
   @Override
-  public void markBlockRangeForRenderUpdate(int x1, int y1, int z1, int x2, int y2, int z2) {}
-
+  public void markBlockRangeForRenderUpdate(int x1, int y1, int z1, int x2, int y2, int z2) {
+  }
+  
   @Override
   public void playSoundToAllNearExcept(
       EntityPlayer player,
@@ -32,11 +36,13 @@ public class WorldListener implements IWorldEventListener {
       double y,
       double z,
       float volume,
-      float pitch) {}
-
+      float pitch) {
+  }
+  
   @Override
-  public void playRecord(SoundEvent soundIn, BlockPos pos) {}
-
+  public void playRecord(SoundEvent soundIn, BlockPos pos) {
+  }
+  
   @Override
   public void spawnParticle(
       int particleID,
@@ -47,8 +53,9 @@ public class WorldListener implements IWorldEventListener {
       double xSpeed,
       double ySpeed,
       double zSpeed,
-      int... parameters) {}
-
+      int... parameters) {
+  }
+  
   @Override
   public void spawnParticle(
       int p_190570_1_,
@@ -60,24 +67,28 @@ public class WorldListener implements IWorldEventListener {
       double p_190570_10_,
       double p_190570_12_,
       double p_190570_14_,
-      int... p_190570_16_) {}
-
+      int... p_190570_16_) {
+  }
+  
   @Override
   public void onEntityAdded(Entity entityIn) {
     MinecraftForge.EVENT_BUS.post(new EntityAddedEvent(entityIn));
   }
-
+  
   @Override
   public void onEntityRemoved(Entity entityIn) {
     MinecraftForge.EVENT_BUS.post(new EntityRemovedEvent(entityIn));
   }
-
+  
   @Override
-  public void broadcastSound(int soundID, BlockPos pos, int data) {}
-
+  public void broadcastSound(int soundID, BlockPos pos, int data) {
+  }
+  
   @Override
-  public void playEvent(EntityPlayer player, int type, BlockPos blockPosIn, int data) {}
-
+  public void playEvent(EntityPlayer player, int type, BlockPos blockPosIn, int data) {
+  }
+  
   @Override
-  public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress) {}
+  public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress) {
+  }
 }

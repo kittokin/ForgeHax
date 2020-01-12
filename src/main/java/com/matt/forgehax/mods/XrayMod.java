@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @RegisterMod
 public class XrayMod extends ToggleMod {
+  
   public final Setting<Integer> opacity =
       getCommandStub()
           .builders()
@@ -33,13 +34,13 @@ public class XrayMod extends ToggleMod {
                 reloadChunks();
               })
           .build();
-
+  
   private boolean previousForgeLightPipelineEnabled = false;
-
+  
   public XrayMod() {
     super(Category.WORLD, "Xray", false, "See blocks through walls");
   }
-
+  
   @Override
   public void onEnabled() {
     previousForgeLightPipelineEnabled = ForgeModContainer.forgeLightPipelineEnabled;
@@ -49,7 +50,7 @@ public class XrayMod extends ToggleMod {
     reloadChunks();
     ForgeHaxHooks.SHOULD_DISABLE_CAVE_CULLING.enable("Xray");
   }
-
+  
   @Override
   public void onDisabled() {
     ForgeModContainer.forgeLightPipelineEnabled = previousForgeLightPipelineEnabled;
@@ -57,9 +58,9 @@ public class XrayMod extends ToggleMod {
     reloadChunks();
     ForgeHaxHooks.SHOULD_DISABLE_CAVE_CULLING.disable("Xray");
   }
-
+  
   private boolean isInternalCall = false;
-
+  
   @SubscribeEvent
   public void onPreRenderBlockLayer(RenderBlockLayerEvent.Pre event) {
     if (!isInternalCall) {
@@ -87,10 +88,11 @@ public class XrayMod extends ToggleMod {
       }
     }
   }
-
+  
   @SubscribeEvent
-  public void onPostRenderBlockLayer(RenderBlockLayerEvent.Post event) {}
-
+  public void onPostRenderBlockLayer(RenderBlockLayerEvent.Post event) {
+  }
+  
   @SubscribeEvent
   public void onRenderBlockInLayer(RenderBlockInLayerEvent event) {
     if (event.getCompareToLayer().equals(BlockRenderLayer.TRANSLUCENT)) {

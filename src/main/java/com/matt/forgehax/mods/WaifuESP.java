@@ -26,10 +26,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @RegisterMod
 public class WaifuESP extends ToggleMod {
+  
   public WaifuESP() {
     super(Category.RENDER, "WaifuESP", false, "overlay cute animes over players");
   }
-
+  
   public final Setting<Boolean> noRenderPlayers =
       getCommandStub()
           .builders()
@@ -38,16 +39,15 @@ public class WaifuESP extends ToggleMod {
           .description("render other players")
           .defaultTo(false)
           .build();
-
+  
   // private final ResourceLocation waifu = new ResourceLocation("textures/forgehax/waifu1.png");
   private ResourceLocation waifu;
-
-  private final String waifuUrl =
-      "https://raw.githubusercontent.com/fr1kin/ForgeHax/master/src/main/resources/assets/minecraft/textures/forgehax/waifu1.png";
-
+  
+  private final String waifuUrl = "https://raw.githubusercontent.com/forgehax/assets/master/img/waifu_v01.png";
+  
   private final File waifuCache =
       Helper.getFileManager().getBaseResolve("cache/waifu.png").toFile();
-
+  
   private <T> BufferedImage getImage(T source, ThrowingFunction<T, BufferedImage> readFunction) {
     try {
       return readFunction.apply(source);
@@ -56,18 +56,20 @@ public class WaifuESP extends ToggleMod {
       return null;
     }
   }
-
+  
   private boolean shouldDraw(EntityLivingBase entity) {
     return (!entity.equals(MC.player)
         && EntityUtils.isAlive(entity)
         && EntityUtils.isValidEntity(entity)
         && (EntityUtils.isPlayer(entity)));
   }
-
+  
   @SubscribeEvent(priority = EventPriority.LOWEST)
   public void onRenderGameOverlayEvent(RenderGameOverlayEvent.Text event) {
-    if (waifu == null) return;
-
+    if (waifu == null) {
+      return;
+    }
+    
     for (Entity entity : MC.world.loadedEntityList) {
       if (EntityUtils.isLiving(entity) && shouldDraw((EntityLivingBase) entity)) {
         EntityLivingBase living = (EntityLivingBase) (entity);
@@ -77,17 +79,17 @@ public class WaifuESP extends ToggleMod {
         VectorUtils.ScreenPos top = VectorUtils._toScreen(topVec.x, topVec.y, topVec.z);
         VectorUtils.ScreenPos bot = VectorUtils._toScreen(bottomVec.x, bottomVec.y, bottomVec.z);
         if (top.isVisible || bot.isVisible) {
-
+          
           int height = (bot.y - top.y);
           int width = height;
-
+          
           int x =
               (int) (top.x - (width / 1.8)); // normally 2.0 but lowering it shifts it to the left
           int y = top.y;
-
+          
           // draw waifu
           MC.renderEngine.bindTexture(waifu);
-
+          
           GlStateManager.color(255, 255, 255);
           Gui.drawScaledCustomSizeModalRect(
               x, y, 0, 0, width, height, width, height, width, height);
@@ -95,14 +97,14 @@ public class WaifuESP extends ToggleMod {
       }
     }
   }
-
+  
   @SubscribeEvent
   public void onRenderPlayer(RenderPlayerEvent.Pre event) {
     if (noRenderPlayers.getAsBoolean() && !event.getEntity().equals(MC.player)) {
       event.setCanceled(true);
     }
   }
-
+  
   @Override
   public void onLoad() {
     MC.addScheduledTask(
@@ -125,7 +127,7 @@ public class WaifuESP extends ToggleMod {
               LOGGER.warn("Failed to download waifu image");
               return;
             }
-
+            
             DynamicTexture dynamicTexture = new DynamicTexture(image);
             dynamicTexture.loadTexture(MC.getResourceManager());
             waifu = MC.getTextureManager().getDynamicTextureLocation("WAIFU", dynamicTexture);
@@ -134,9 +136,10 @@ public class WaifuESP extends ToggleMod {
           }
         });
   }
-
+  
   @FunctionalInterface
   private interface ThrowingFunction<T, R> {
+    
     R apply(T obj) throws IOException;
   }
 }

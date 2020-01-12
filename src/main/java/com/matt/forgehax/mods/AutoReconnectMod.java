@@ -22,16 +22,19 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 @RegisterMod
 public class AutoReconnectMod extends ToggleMod {
+  
   private static ServerData lastConnectedServer;
-
+  
   public static boolean hasAutoLogged =
       false; // used to disable autoreconnecting without disabling the entire mod
-
+  
   public void updateLastConnectedServer() {
     ServerData data = MC.getCurrentServerData();
-    if (data != null) lastConnectedServer = data;
+    if (data != null) {
+      lastConnectedServer = data;
+    }
   }
-
+  
   public final Setting<Double> delay =
       getCommandStub()
           .builders()
@@ -40,14 +43,14 @@ public class AutoReconnectMod extends ToggleMod {
           .description("Delay between each reconnect attempt")
           .defaultTo(5.D)
           .build();
-
+  
   public AutoReconnectMod() {
     super(Category.MISC, "AutoReconnect", false, "Automatically reconnects to server");
   }
-
+  
   @SubscribeEvent
   public void onGuiOpened(GuiOpenEvent event) {
-    if (!hasAutoLogged)
+    if (!hasAutoLogged) {
       if (event.getGui() instanceof GuiDisconnected
           && !(event.getGui() instanceof GuiDisconnectedOverride)) {
         updateLastConnectedServer();
@@ -60,28 +63,30 @@ public class AutoReconnectMod extends ToggleMod {
                 FastReflection.Fields.GuiDisconnected_reason.get(disconnected),
                 delay.get()));
       }
+    }
   }
-
+  
   @SubscribeEvent
   public void onWorldLoad(WorldEvent.Load event) {
     // we got on the server or stopped joining, now undo queue
     hasAutoLogged = false; // make mod work when you rejoin
   }
-
+  
   @SubscribeEvent
   public void onWorldUnload(WorldEvent.Unload event) {
     updateLastConnectedServer();
   }
-
+  
   public static class GuiDisconnectedOverride extends GuiDisconnected {
+    
     private GuiScreen parent;
     private ITextComponent message;
-
+    
     // delay * 1000 = seconds to miliseconds
     private long reconnectTime;
-
+    
     private GuiButton reconnectButton = null;
-
+    
     public GuiDisconnectedOverride(
         GuiScreen screen,
         String reasonLocalizationKey,
@@ -106,37 +111,37 @@ public class AutoReconnectMod extends ToggleMod {
       }
       // parse server return text and find queue pos
     }
-
+    
     public long getTimeUntilReconnect() {
       return reconnectTime - System.currentTimeMillis();
     }
-
+    
     public double getTimeUntilReconnectInSeconds() {
       return (double) getTimeUntilReconnect() / 1000.D;
     }
-
+    
     public String getFormattedReconnectText() {
       return String.format("Reconnecting (%.1f)...", getTimeUntilReconnectInSeconds());
     }
-
+    
     public ServerData getLastConnectedServerData() {
       return lastConnectedServer != null ? lastConnectedServer : MC.getCurrentServerData();
     }
-
+    
     private void reconnect() {
       ServerData data = getLastConnectedServerData();
       if (data != null) {
         FMLClientHandler.instance().showGuiScreen(new GuiConnecting(parent, MC, data));
       }
     }
-
+    
     @Override
     public void initGui() {
       super.initGui();
       List<String> multilineMessage =
           fontRenderer.listFormattedStringToWidth(message.getFormattedText(), width - 50);
       int textHeight = multilineMessage.size() * fontRenderer.FONT_HEIGHT;
-
+      
       if (getLastConnectedServerData() != null) {
         buttonList.add(
             reconnectButton =
@@ -147,7 +152,7 @@ public class AutoReconnectMod extends ToggleMod {
                     getFormattedReconnectText()));
       }
     }
-
+    
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
       super.actionPerformed(button);
@@ -155,12 +160,16 @@ public class AutoReconnectMod extends ToggleMod {
         reconnect();
       }
     }
-
+    
     @Override
     public void updateScreen() {
       super.updateScreen();
-      if (reconnectButton != null) reconnectButton.displayString = getFormattedReconnectText();
-      if (System.currentTimeMillis() >= reconnectTime) reconnect();
+      if (reconnectButton != null) {
+        reconnectButton.displayString = getFormattedReconnectText();
+      }
+      if (System.currentTimeMillis() >= reconnectTime) {
+        reconnect();
+      }
     }
   }
 }

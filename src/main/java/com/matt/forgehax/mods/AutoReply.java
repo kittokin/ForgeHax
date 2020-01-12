@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @RegisterMod
 public class AutoReply extends ToggleMod {
+  
   public final Setting<String> reply =
       getCommandStub()
           .builders()
@@ -20,7 +21,7 @@ public class AutoReply extends ToggleMod {
           .description("Text to reply with")
           .defaultTo("fuck off newfag")
           .build();
-
+  
   public final Setting<String> mode =
       getCommandStub()
           .builders()
@@ -29,7 +30,7 @@ public class AutoReply extends ToggleMod {
           .description("Reply or chat")
           .defaultTo("REPLY")
           .build();
-
+  
   public final Setting<String> search =
       getCommandStub()
           .builders()
@@ -38,11 +39,11 @@ public class AutoReply extends ToggleMod {
           .description("Text to search for in message")
           .defaultTo("whispers: ")
           .build();
-
+  
   public AutoReply() {
     super(Category.MISC, "AutoReply", false, "Automatically talk in chat if finds a strings");
   }
-
+  
   @SubscribeEvent
   public void onClientChat(ClientChatReceivedEvent event) {
     String message = (event.getMessage().getUnformattedText());

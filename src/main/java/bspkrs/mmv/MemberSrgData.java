@@ -27,13 +27,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 
 public class MemberSrgData {
+  
   private final String obfOwner;
   private final String obfName;
   private final String srgOwner;
   private final String srgPkg;
   private final String srgName;
   private final boolean isClientOnly;
-
+  
   public MemberSrgData(
       String obfOwner,
       String obfName,
@@ -48,31 +49,31 @@ public class MemberSrgData {
     this.srgName = srgName;
     this.isClientOnly = isClientOnly;
   }
-
+  
   public String getObfOwner() {
     return obfOwner;
   }
-
+  
   public String getObfName() {
     return obfName;
   }
-
+  
   public String getSrgOwner() {
     return srgOwner;
   }
-
+  
   public String getSrgName() {
     return srgName;
   }
-
+  
   public boolean isClientOnly() {
     return isClientOnly;
   }
-
+  
   public String getSrgPkg() {
     return srgPkg;
   }
-
+  
   public boolean contains(String s) {
     return srgName.contains(s) || obfName.contains(s);
   }

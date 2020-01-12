@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @RegisterMod
 public class StopEntityUpdates extends ToggleMod {
+  
   public StopEntityUpdates() {
     super(
         Category.MISC,
@@ -16,7 +17,7 @@ public class StopEntityUpdates extends ToggleMod {
         false,
         "Prevent entity metadata update packets from being processed");
   }
-
+  
   @SubscribeEvent
   public void onPacketIn(PacketEvent.Incoming.Pre event) {
     if (event.getPacket() instanceof SPacketEntityMetadata) {

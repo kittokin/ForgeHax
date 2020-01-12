@@ -40,18 +40,19 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 public class CsvFile {
+  
   private final File file;
   private final Map<String, CsvData> srgMemberName2CsvData;
   private boolean isDirty;
   private String headerLine;
-
+  
   public CsvFile(File file) throws IOException {
     this.file = file;
     srgMemberName2CsvData = new TreeMap<String, CsvData>();
     readFromFile();
     isDirty = false;
   }
-
+  
   public void readFromFile() throws IOException {
     Scanner in = new Scanner(new BufferedReader(new FileReader(file)));
     try {
@@ -69,7 +70,7 @@ public class CsvFile {
       in.close();
     }
   }
-
+  
   public void writeToFile() throws IOException {
     if (isDirty) {
       if (file.exists()) {
@@ -81,37 +82,39 @@ public class CsvFile {
                     + ".bak");
         file.renameTo(fileBak);
       }
-
+      
       file.createNewFile();
-
+      
       PrintWriter out = new PrintWriter(new FileWriter(file));
       out.println(headerLine);
-
-      for (CsvData data : srgMemberName2CsvData.values()) out.println(data.toCsv());
-
+      
+      for (CsvData data : srgMemberName2CsvData.values()) {
+        out.println(data.toCsv());
+      }
+      
       out.close();
-
+      
       isDirty = false;
     }
   }
-
+  
   public boolean hasCsvDataForKey(String srgName) {
     return srgMemberName2CsvData.containsKey(srgName);
   }
-
+  
   public CsvData getCsvDataForKey(String srgName) {
     return srgMemberName2CsvData.get(srgName);
   }
-
+  
   public void updateCsvDataForKey(String srgName, CsvData csvData) {
     srgMemberName2CsvData.put(srgName, csvData);
     isDirty = true;
   }
-
+  
   public boolean isDirty() {
     return isDirty;
   }
-
+  
   public void setIsDirty(boolean bol) {
     isDirty = bol;
   }

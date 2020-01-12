@@ -38,9 +38,10 @@ import java.util.List;
 import java.util.Map;
 
 public class VersionFetcher {
+  
   private final String jsonUrl = "http://export.mcpbot.bspk.rs/versions.json";
   private List<String> versions;
-
+  
   @SuppressWarnings("unchecked")
   public List<String> getVersions(boolean force) throws IOException {
     if ((versions == null) || force) {
@@ -48,16 +49,21 @@ public class VersionFetcher {
       final URLConnection connection = url.openConnection();
       connection.addRequestProperty("User-Agent", "MMV/1.0.0");
       BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
+      
       Map<String, Object> json = new Gson().fromJson(br, Map.class);
-
+      
       versions = new ArrayList<String>();
-      for (String mcVer : json.keySet())
-        for (String channel : ((Map<String, ArrayList<Double>[]>) json.get(mcVer)).keySet())
-          for (Double ver : ((Map<String, ArrayList<Double>>) json.get(mcVer)).get(channel))
+      for (String mcVer : json.keySet()) {
+        for (String channel : ((Map<String, ArrayList<Double>[]>) json.get(mcVer)).keySet()) {
+          for (Double ver : ((Map<String, ArrayList<Double>>) json.get(mcVer)).get(channel)) {
             versions.add(mcVer + "_" + channel + "_" + String.format("%.0f", ver));
+          }
+        }
+      }
       Collections.sort(versions, Collections.reverseOrder(new SplittedNaturalComparator("_")));
       return versions;
-    } else return versions;
+    } else {
+      return versions;
+    }
   }
 }

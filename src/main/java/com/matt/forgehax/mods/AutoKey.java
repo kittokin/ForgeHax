@@ -10,18 +10,22 @@ import com.matt.forgehax.util.key.KeyBindingHandler;
 import com.matt.forgehax.util.mod.Category;
 import com.matt.forgehax.util.mod.ToggleMod;
 import com.matt.forgehax.util.mod.loader.RegisterMod;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-/** Created by Babbaj on 1/30/2018. */
+/**
+ * Created by Babbaj on 1/30/2018.
+ */
 @RegisterMod
 public class AutoKey extends ToggleMod {
-
+  
   public AutoKey() {
     super(Category.PLAYER, "AutoKey", false, "Automatically click/press keys");
   }
-
+  
   private final Setting<Integer> delay =
       getCommandStub()
           .builders()
@@ -31,9 +35,9 @@ public class AutoKey extends ToggleMod {
           .defaultTo(500) // 500 ms
           .min(0)
           .build();
-
+  
   private static Setting<Integer> holdTime; // static to allow easy access from ClickMode
-
+  
   {
     holdTime =
         getCommandStub()
@@ -44,20 +48,22 @@ public class AutoKey extends ToggleMod {
             .defaultTo(150) // approximate minimum for reliable key pressing
             .build();
   }
-
+  
   // TODO: make serializable and save as json
   private final Map<KeyBindingHandler, ClickMode> activeKeys = new HashMap<>();
-
+  
   private long lastTimeMillis;
-
+  
   @SubscribeEvent
   public void onPlayerUpdate(LocalPlayerUpdateEvent event) {
     final int lastClick = (int) (System.currentTimeMillis() - lastTimeMillis);
-    if (lastClick >= delay.get()) lastTimeMillis = System.currentTimeMillis();
-
+    if (lastClick >= delay.get()) {
+      lastTimeMillis = System.currentTimeMillis();
+    }
+    
     activeKeys.forEach((key, mode) -> mode.apply(key, lastClick));
   }
-
+  
   @Override
   public void onLoad() {
     // add a key
@@ -74,7 +80,7 @@ public class AutoKey extends ToggleMod {
                 Helper.printMessage("Unknown key: %s", data.getArgumentAsString(0));
                 return;
               }
-
+              
               String mode = data.getArgumentAsString(1);
               ClickMode clickMode =
                   Arrays.stream(ClickMode.values())
@@ -88,7 +94,7 @@ public class AutoKey extends ToggleMod {
               activeKeys.put(key, clickMode);
             })
         .build();
-
+    
     // remove all keys
     getCommandStub()
         .builders()
@@ -104,7 +110,7 @@ public class AutoKey extends ToggleMod {
               activeKeys.clear();
             })
         .build();
-
+    
     // remove a single key
     getCommandStub()
         .builders()
@@ -116,40 +122,44 @@ public class AutoKey extends ToggleMod {
               data.requiredArguments(1);
               KeyBindingHandler key = Bindings.getKey(data.getArgumentAsString(0));
               ClickMode mode = activeKeys.remove(key);
-              if (mode != null)
+              if (mode != null) {
                 Helper.printMessage("Removed key: %s", key.getBinding().getKeyDescription());
-              else Helper.printMessage("Unknown key");
+              } else {
+                Helper.printMessage("Unknown key");
+              }
             })
         .build();
   }
-
+  
   private static void incrementPressTime(KeyBindingHandler binding) {
     FastField<Integer> field = FastReflection.Fields.Binding_pressTime;
     int currTime = field.get(binding.getBinding());
     field.set(binding.getBinding(), currTime + 1);
   }
-
+  
   private enum ClickMode {
     TAP(
         (key, time) -> {
           if (time < holdTime.getAsInteger()) {
             incrementPressTime(key);
             key.setPressed(true);
-          } else key.setPressed(false);
+          } else {
+            key.setPressed(false);
+          }
         }), // hold key for at least 150ms
-
+    
     HOLD(
         (key, time) -> {
           incrementPressTime(key);
           key.setPressed(true);
         }); // hold key forever
-
+    
     BiConsumer<KeyBindingHandler, Integer> clickAction;
-
+    
     ClickMode(BiConsumer<KeyBindingHandler, Integer> action) {
       this.clickAction = action;
     }
-
+    
     public void apply(KeyBindingHandler key, int lastTime) {
       clickAction.accept(key, lastTime);
     }

@@ -17,11 +17,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @RegisterMod
 public class AutoLog extends ToggleMod {
-
+  
   public AutoLog() {
     super(Category.COMBAT, "AutoLog", false, "automatically disconnect");
   }
-
+  
   public final Setting<Integer> threshold =
       getCommandStub()
           .builders()
@@ -46,15 +46,15 @@ public class AutoLog extends ToggleMod {
           .description("Disconnect if a player enters render distance")
           .defaultTo(false)
           .build();
-
+  
   @SubscribeEvent
   public void onLocalPlayerUpdate(LocalPlayerUpdateEvent event) {
     if (MC.player != null) {
       int health = (int) (MC.player.getHealth() + MC.player.getAbsorptionAmount());
       if (health <= threshold.get()
           || (noTotem.getAsBoolean()
-              && !((MC.player.getHeldItemOffhand().getItem() == Items.TOTEM_OF_UNDYING)
-                  || MC.player.getHeldItemMainhand().getItem() == Items.TOTEM_OF_UNDYING))) {
+          && !((MC.player.getHeldItemOffhand().getItem() == Items.TOTEM_OF_UNDYING)
+          || MC.player.getHeldItemMainhand().getItem() == Items.TOTEM_OF_UNDYING))) {
         AutoReconnectMod.hasAutoLogged = true;
         getNetworkManager()
             .closeChannel(new TextComponentString("Health too low (" + health + ")"));
@@ -62,17 +62,17 @@ public class AutoLog extends ToggleMod {
       }
     }
   }
-
+  
   @SubscribeEvent
   public void onPacketRecieved(PacketEvent.Incoming.Pre event) {
     if (event.getPacket() instanceof SPacketSpawnPlayer) {
       if (disconnectOnNewPlayer.getAsBoolean()) {
         AutoReconnectMod.hasAutoLogged = true; // dont automatically reconnect
         UUID id = ((SPacketSpawnPlayer) event.getPacket()).getUniqueId();
-
+        
         NetworkPlayerInfo info = MC.getConnection().getPlayerInfo(id);
         String name = info != null ? info.getGameProfile().getName() : "(Failed) " + id.toString();
-
+        
         getNetworkManager()
             .closeChannel(new TextComponentString(name + " entered render distance"));
         disable();

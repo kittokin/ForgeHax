@@ -27,9 +27,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 
 public class MethodSrgData extends MemberSrgData implements Comparable<MethodSrgData> {
+  
   private final String obfDescriptor;
   private final String srgDescriptor;
-
+  
   public MethodSrgData(
       String obfOwner,
       String obfName,
@@ -43,18 +44,21 @@ public class MethodSrgData extends MemberSrgData implements Comparable<MethodSrg
     this.obfDescriptor = obfDescriptor;
     this.srgDescriptor = srgDescriptor;
   }
-
+  
   public String getObfDescriptor() {
     return obfDescriptor;
   }
-
+  
   public String getSrgDescriptor() {
     return srgDescriptor;
   }
-
+  
   @Override
   public int compareTo(MethodSrgData o) {
-    if (o != null) return getSrgName().compareTo(o.getSrgName());
-    else return 1;
+    if (o != null) {
+      return getSrgName().compareTo(o.getSrgName());
+    } else {
+      return 1;
+    }
   }
 }

@@ -14,18 +14,19 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @RegisterMod
 public class NoFallMod extends ToggleMod {
+  
   public NoFallMod() {
     super(Category.PLAYER, "NoFall", false, "Prevents fall damage from being taken");
   }
-
+  
   private float lastFallDistance = 0;
-
+  
   @SubscribeEvent
   public void onPacketSend(PacketEvent.Outgoing.Pre event) {
     if (event.getPacket() instanceof CPacketPlayer
         && !(event.getPacket() instanceof CPacketPlayer.Rotation)
         && !PacketHelper.isIgnored(event.getPacket())) {
-      CPacketPlayer packetPlayer = (CPacketPlayer) event.getPacket();
+      CPacketPlayer packetPlayer = event.getPacket();
       if (FastReflection.Fields.CPacketPlayer_onGround.get(packetPlayer) && lastFallDistance >= 4) {
         CPacketPlayer packet =
             new CPacketPlayer.PositionRotation(

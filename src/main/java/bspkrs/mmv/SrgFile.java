@@ -39,6 +39,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class SrgFile {
+  
   // All maps should be inter-connected to reference a single set of objects
   public final Map<String, ClassSrgData> srgClassName2ClassData =
       new TreeMap<String, ClassSrgData>(); // full/pkg/ClassSrgName -> ClassSrgData
@@ -56,12 +57,12 @@ public class SrgFile {
       new TreeMap<String, ClassSrgData>(); // func_12345_a -> ClassSrgData
   public final Map<String, ClassSrgData> srgFieldName2ClassData =
       new TreeMap<String, ClassSrgData>(); // field_12345_a -> ClassSrgData
-
+  
   public static String getLastComponent(String s) {
     String[] parts = s.split("/");
     return parts[parts.length - 1];
   }
-
+  
   public SrgFile(File f, ExcFile excFile, StaticMethodsFile staticMethods) throws IOException {
     Scanner in = new Scanner(new BufferedReader(new FileReader(f)));
     try {
@@ -73,20 +74,23 @@ public class SrgFile {
           String deobf = in.next();
           String srgName = getLastComponent(deobf);
           String pkgName = deobf.substring(0, deobf.lastIndexOf('/'));
-
+          
           ClassSrgData classData = new ClassSrgData(obf, srgName, pkgName, in.hasNext("#C"));
-
-          if (!srgPkg2ClassDataSet.containsKey(pkgName))
+          
+          if (!srgPkg2ClassDataSet.containsKey(pkgName)) {
             srgPkg2ClassDataSet.put(pkgName, new TreeSet<ClassSrgData>());
+          }
           srgPkg2ClassDataSet.get(pkgName).add(classData);
-
+          
           srgClassName2ClassData.put(pkgName + "/" + srgName, classData);
-
-          if (!class2MethodDataSet.containsKey(classData))
+          
+          if (!class2MethodDataSet.containsKey(classData)) {
             class2MethodDataSet.put(classData, new TreeSet<MethodSrgData>());
-
-          if (!class2FieldDataSet.containsKey(classData))
+          }
+          
+          if (!class2FieldDataSet.containsKey(classData)) {
             class2FieldDataSet.put(classData, new TreeSet<FieldSrgData>());
+          }
         } else if (in.hasNext("FD:")) {
           // FD: aql/c net/minecraft/block/BlockStoneBrick/field_94408_c #C
           in.next(); // skip FD:
@@ -98,10 +102,10 @@ public class SrgFile {
           String srgPkg = deobf.substring(0, deobf.lastIndexOf('/'));
           String srgOwner = getLastComponent(srgPkg);
           srgPkg = srgPkg.substring(0, srgPkg.lastIndexOf('/'));
-
+          
           FieldSrgData fieldData =
               new FieldSrgData(obfOwner, obfName, srgOwner, srgPkg, srgName, in.hasNext("#C"));
-
+          
           srgFieldName2FieldData.put(srgName, fieldData);
           class2FieldDataSet
               .get(srgClassName2ClassData.get(srgPkg + "/" + srgOwner))
@@ -121,7 +125,7 @@ public class SrgFile {
           String srgOwner = getLastComponent(srgPkg);
           srgPkg = srgPkg.substring(0, srgPkg.lastIndexOf('/'));
           String srgDescriptor = in.next();
-
+          
           MethodSrgData methodData =
               new MethodSrgData(
                   obfOwner,
@@ -132,26 +136,29 @@ public class SrgFile {
                   srgName,
                   srgDescriptor,
                   in.hasNext("#C"));
-
+          
           srgMethodName2MethodData.put(srgName, methodData);
           class2MethodDataSet
               .get(srgClassName2ClassData.get(srgPkg + "/" + srgOwner))
               .add(methodData);
           srgMethodName2ClassData.put(srgName, srgClassName2ClassData.get(srgPkg + "/" + srgOwner));
-
+          
           // Hack in the missing parameter data
           ExcData toAdd =
               new ExcData(
                   srgOwner, srgName, srgDescriptor, new String[0], staticMethods.contains(srgName));
           ExcData existing = excFile.srgMethodName2ExcData.get(srgName);
-
+          
           if ((existing == null)
               || (existing.getParameters().length < toAdd.getParameters().length)) {
             excFile.srgMethodName2ExcData.put(srgName, toAdd);
-            for (String parameter : toAdd.getParameters())
+            for (String parameter : toAdd.getParameters()) {
               excFile.srgParamName2ExcData.put(parameter, toAdd);
+            }
           }
-        } else in.nextLine();
+        } else {
+          in.nextLine();
+        }
       }
     } finally {
       in.close();
