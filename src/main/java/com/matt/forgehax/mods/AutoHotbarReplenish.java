@@ -174,6 +174,7 @@ public class AutoHotbarReplenish extends ToggleMod {
               )
               .max(Comparator.comparingInt(LocalPlayerInventory::getHotbarDistance))
 <<<<<<< HEAD
+<<<<<<< HEAD
               .map(
                   hotbarItem ->
                       TaskChain.<Runnable>builder()
@@ -204,6 +205,8 @@ public class AutoHotbarReplenish extends ToggleMod {
                           .then(this::tryPlacingHeldItem)
                           .build())
 =======
+=======
+>>>>>>> fr1kin-master
               .map(hotbarItem ->
                   TaskChain.<Runnable>builder()
                       .then(() -> {
@@ -231,7 +234,10 @@ public class AutoHotbarReplenish extends ToggleMod {
                       })
                       .then(this::tryPlacingHeldItem)
                       .build())
+<<<<<<< HEAD
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
+=======
+>>>>>>> fr1kin-master
               .orElse(TaskChain.empty());
     }
     

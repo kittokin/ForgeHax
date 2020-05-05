@@ -1,9 +1,13 @@
 package com.matt.forgehax.mods;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import static com.matt.forgehax.Helper.getWorld;
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
+=======
+import static com.matt.forgehax.Helper.getWorld;
+>>>>>>> fr1kin-master
 import static com.matt.forgehax.util.ImageUtils.createResizedCopy;
 
 import com.matt.forgehax.Helper;
@@ -11,9 +15,13 @@ import com.matt.forgehax.asm.events.PacketEvent;
 import com.matt.forgehax.asm.reflection.FastReflection;
 import com.matt.forgehax.util.FileManager;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import com.matt.forgehax.util.command.Setting;
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
+=======
+import com.matt.forgehax.util.command.Setting;
+>>>>>>> fr1kin-master
 import com.matt.forgehax.util.mod.Category;
 import com.matt.forgehax.util.mod.ToggleMod;
 import com.matt.forgehax.util.mod.loader.RegisterMod;
@@ -42,6 +50,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class MapDownloader extends ToggleMod {
   
   private File outputDir;
+<<<<<<< HEAD
 <<<<<<< HEAD
   
   public MapDownloader() {
@@ -73,6 +82,32 @@ public class MapDownloader extends ToggleMod {
   public MapDownloader() {
     super(Category.MISC, "MapDownloader", false, "Saves map items as images");
   }
+=======
+  private int ticks;
+  private List<String> mapList = new ArrayList<>();
+
+  private final Setting<Integer> resolution =
+      getCommandStub()
+          .builders()
+          .<Integer>newSettingBuilder()
+          .name("resolution")
+          .description("resolution of the downloaded image (default 128)")
+          .defaultTo(128)
+          .build();
+
+  private final Setting<Boolean> onReceived =
+      getCommandStub()
+          .builders()
+          .<Boolean>newSettingBuilder()
+          .name("on-received")
+          .description("download all maps as they are received")
+          .defaultTo(false)
+          .build();
+
+  public MapDownloader() {
+    super(Category.MISC, "MapDownloader", false, "Saves map items as images");
+  }
+>>>>>>> fr1kin-master
 
   @Override
   protected void onDisabled() {
@@ -103,7 +138,10 @@ public class MapDownloader extends ToggleMod {
     }
   }
 
+<<<<<<< HEAD
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
+=======
+>>>>>>> fr1kin-master
   private void saveImage(String fileName, BufferedImage image) {
     
     if (outputDir == null) {
@@ -120,6 +158,7 @@ public class MapDownloader extends ToggleMod {
     }
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
   
   private void downloadMap(String fileName, Integer scaledRes) {
     if (MC.player == null || !(MC.player.getHeldItemMainhand().getItem() instanceof ItemMap)) {
@@ -129,9 +168,32 @@ public class MapDownloader extends ToggleMod {
     ItemMap map = (ItemMap) MC.player.getHeldItemMainhand().getItem();
     MapData heldMapData = map.getMapData(MC.player.getHeldItemMainhand(), MC.world);
     
+=======
+
+  private void downloadAllInRender(Integer scaledRes) {
+    if (getWorld() == null) return;
+
+    getWorld().getLoadedEntityList().stream()
+        .filter(EntityItemFrame.class::isInstance)
+        .map(EntityItemFrame.class::cast)
+        .filter(itemframe -> itemframe.getDisplayedItem().getItem() instanceof ItemMap)
+        .forEach(itemframe -> {
+          ItemMap map = (ItemMap) itemframe.getDisplayedItem().getItem();
+          MapData data = map.getMapData(itemframe.getDisplayedItem(), getWorld());
+
+          if (!mapList.contains(data.mapName)) {
+            downloadMap(data, null, scaledRes);
+            mapList.add(data.mapName);
+          }
+        });
+  }
+
+  private void downloadMap(MapData data, String fileName, Integer scaledRes) {
+>>>>>>> fr1kin-master
     if (fileName == null) {
-      fileName = heldMapData.mapName;
+      fileName = data.mapName;
     }
+<<<<<<< HEAD
     
     ResourceLocation location = findResourceLocation(heldMapData.mapName);
 =======
@@ -161,6 +223,10 @@ public class MapDownloader extends ToggleMod {
 
     ResourceLocation location = findResourceLocation(data.mapName);
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
+=======
+
+    ResourceLocation location = findResourceLocation(data.mapName);
+>>>>>>> fr1kin-master
     if (location == null) {
       Helper.printMessage("Failed to find ResourceLocation");
       return;
@@ -172,10 +238,14 @@ public class MapDownloader extends ToggleMod {
       image = createResizedCopy(image, scaledRes, scaledRes, true);
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 =======
 
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
+=======
+
+>>>>>>> fr1kin-master
     saveImage(fileName, image);
   }
   
@@ -195,6 +265,10 @@ public class MapDownloader extends ToggleMod {
   private BufferedImage dynamicToImage(DynamicTexture texture) {
     int[] data = texture.getTextureData();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> fr1kin-master
     if (data.length != 128 * 128) {
       return null;
     }
@@ -235,12 +309,17 @@ public class MapDownloader extends ToggleMod {
                 Helper.printMessage("Failed to parse resolution");
               }
 <<<<<<< HEAD
+<<<<<<< HEAD
               
               downloadMap(fileName, scaledRes);
 =======
 
               downloadMap(mapData, fileName, scaledRes);
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
+=======
+
+              downloadMap(mapData, fileName, scaledRes);
+>>>>>>> fr1kin-master
             })
         .build();
   }

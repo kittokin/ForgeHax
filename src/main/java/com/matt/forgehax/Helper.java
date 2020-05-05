@@ -22,12 +22,18 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import org.apache.logging.log4j.Logger;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> fr1kin-master
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.Scanner;
 
+<<<<<<< HEAD
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
+=======
+>>>>>>> fr1kin-master
 /**
  * Created on 4/25/2017 by fr1kin
  */
@@ -53,14 +59,20 @@ public class Helper implements Globals {
     return LOGGER;
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
   
 =======
+=======
+>>>>>>> fr1kin-master
 
   public static Entity getRenderEntity() {
     return MC.getRenderViewEntity();
   }
 
+<<<<<<< HEAD
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
+=======
+>>>>>>> fr1kin-master
   public static EntityPlayerSP getLocalPlayer() {
     return MC.player;
   }

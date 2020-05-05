@@ -1,10 +1,13 @@
 package com.matt.forgehax.mods.services;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static com.matt.forgehax.Helper.getLocalPlayer;
 
 =======
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
+=======
+>>>>>>> fr1kin-master
 import com.matt.forgehax.events.Render2DEvent;
 import com.matt.forgehax.events.RenderEvent;
 import com.matt.forgehax.util.entity.EntityUtils;
@@ -21,10 +24,15 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import static com.matt.forgehax.Helper.getRenderEntity;
 
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
+=======
+import static com.matt.forgehax.Helper.getRenderEntity;
+
+>>>>>>> fr1kin-master
 /**
  * Created on 6/14/2017 by fr1kin
  */
@@ -50,10 +58,14 @@ public class RenderEventService extends ServiceMod {
     GlStateManager.glLineWidth(1.f);
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     Vec3d renderPos = EntityUtils.getInterpolatedPos(getLocalPlayer(), event.getPartialTicks());
 =======
     Vec3d renderPos = EntityUtils.getInterpolatedPos(getRenderEntity(), event.getPartialTicks());
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
+=======
+    Vec3d renderPos = EntityUtils.getInterpolatedPos(getRenderEntity(), event.getPartialTicks());
+>>>>>>> fr1kin-master
     
     RenderEvent e = new RenderEvent(TESSELLATOR, renderPos, event.getPartialTicks());
     e.resetTranslation();
