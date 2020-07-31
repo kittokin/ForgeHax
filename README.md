@@ -5,10 +5,15 @@
 [![](https://img.shields.io/badge/download-1.13.2%20latest-blue.svg?logo=java)](https://jenkins.nhackindustries.com/job/ForgeHax/job/1.13/lastSuccessfulBuild/artifact/build/libs/)
 =======
 [![](https://img.shields.io/badge/download-1.15.2%20latest-blue.svg?logo=java)](https://jenkins.nhackindustries.com/job/ForgeHax/job/1.15/lastSuccessfulBuild/artifact/build/libs/)
+<<<<<<< HEAD
 >>>>>>> dfbf3717fcf8fca944a70062db7192a2f09f70d0
 =======
 [![](https://img.shields.io/badge/download-1.15.2%20latest-blue.svg?logo=java)](https://jenkins.nhackindustries.com/job/ForgeHax/job/1.15/lastSuccessfulBuild/artifact/build/libs/)
 >>>>>>> fr1kin-master
+=======
+[![](https://img.shields.io/badge/download-1.16.1%20latest-blue.svg?logo=java)](https://jenkins.nhackindustries.com/job/ForgeHax/job/1.16/lastSuccessfulBuild/artifact/build/libs/)
+
+>>>>>>> b0984169b0dc675b412e15478aaab324b7498f9f
 [![Build Status](https://jenkins.nhackindustries.com/buildStatus/icon?job=ForgeHax/master)](https://jenkins.nhackindustries.com/job/ForgeHax/job/master)
 [![](https://img.shields.io/matrix/forgehax:nerdsin.space.svg?label=%23forgehax%3Anerdsin.space&logo=matrix)](https://matrix.to/#/#forgehax:nerdsin.space)
 
